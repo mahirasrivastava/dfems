@@ -160,3 +160,8 @@ Package   : 1 (pkg_dfems with 6 members)
 Views     : 5
 
 ================================================================
+Project Report
+
+The complete project report can be viewed here:
+
+[📄 DFEMS Project Report](dfems_report.pdf)

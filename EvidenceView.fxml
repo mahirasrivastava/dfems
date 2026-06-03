@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.dfems.controller.EvidenceController"
+            style="-fx-background-color:#ecf0f1;">
+
+    <top>
+        <HBox style="-fx-background-color:#2c3e50; -fx-padding:12 20;"
+              spacing="16" alignment="CENTER_LEFT">
+            <Button text="⬅ Dashboard" onAction="#goBack"
+                    style="-fx-background-color:#7f8c8d; -fx-text-fill:white; -fx-cursor:hand;"/>
+            <Label text="📁  Evidence Management"
+                   style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="🔄 Refresh" onAction="#handleRefresh"
+                    style="-fx-background-color:#27ae60; -fx-text-fill:white; -fx-cursor:hand;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane orientation="HORIZONTAL" dividerPositions="0.38">
+
+            <!-- LEFT: Upload Form -->
+            <ScrollPane fitToWidth="true" style="-fx-background-color:#fdfefe;" minWidth="320">
+                <VBox spacing="12" style="-fx-padding:20;">
+                    <Label text="Upload New Evidence"
+                           style="-fx-font-size:15; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                    <Separator/>
+
+                    <Label text="Case ID *" style="-fx-font-weight:bold;"/>
+                    <TextField fx:id="caseIdField" promptText="e.g. 1001" prefHeight="34"/>
+
+                    <Label text="Evidence Type *" style="-fx-font-weight:bold;"/>
+                    <ComboBox fx:id="evidenceTypeCombo" maxWidth="Infinity" prefHeight="34"
+                              promptText="Select type..."/>
+
+                    <Label text="Storage Location *" style="-fx-font-weight:bold;"/>
+                    <ComboBox fx:id="storageCombo" maxWidth="Infinity" prefHeight="34"
+                              promptText="Select storage..."/>
+
+                    <Label text="File" style="-fx-font-weight:bold;"/>
+                    <HBox spacing="8">
+                        <TextField fx:id="fileNameField" promptText="File name"
+                                   HBox.hgrow="ALWAYS" prefHeight="34"/>
+                        <Button text="Browse" onAction="#browseFile"
+                                prefHeight="34"
+                                style="-fx-background-color:#2980b9; -fx-text-fill:white; -fx-cursor:hand;"/>
+                    </HBox>
+
+                    <HBox spacing="10">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="File Size (bytes)"/>
+                            <TextField fx:id="fileSizeField" promptText="Auto-filled" prefHeight="34"/>
+                        </VBox>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="File Type"/>
+                            <TextField fx:id="fileTypeField" promptText="e.g. PDF" prefHeight="34"/>
+                        </VBox>
+                    </HBox>
+
+                    <Label text="MD5 Hash" style="-fx-font-weight:bold;"/>
+                    <TextField fx:id="hashField" promptText="Auto-generated on browse" prefHeight="34"/>
+
+                    <Separator/>
+
+                    <Button fx:id="uploadBtn" text="📤  Upload Evidence" onAction="#handleUpload"
+                            maxWidth="Infinity" prefHeight="40"
+                            style="-fx-background-color:#e67e22; -fx-text-fill:white;
+                                   -fx-font-size:13; -fx-font-weight:bold; -fx-cursor:hand;"/>
+
+                    <Label fx:id="statusLabel" wrapText="true" style="-fx-font-weight:bold;"/>
+                </VBox>
+            </ScrollPane>
+
+            <!-- RIGHT: Evidence Table + Chain of Custody -->
+            <SplitPane orientation="VERTICAL" dividerPositions="0.6">
+
+                <!-- Evidence Table -->
+                <VBox spacing="8" style="-fx-padding:15;">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="All Evidence Records"
+                               style="-fx-font-size:14; -fx-font-weight:bold;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="totalEvidenceLabel" style="-fx-text-fill:#7f8c8d;"/>
+                    </HBox>
+                    <TableView fx:id="evidenceTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colEvId"      text="ID"       prefWidth="60"/>
+                            <TableColumn fx:id="colCaseNum"   text="Case No." prefWidth="120"/>
+                            <TableColumn fx:id="colFileName"  text="File Name" prefWidth="180"/>
+                            <TableColumn fx:id="colEvType"    text="Type"     prefWidth="100"/>
+                            <TableColumn fx:id="colSize"      text="Size"     prefWidth="80"/>
+                            <TableColumn fx:id="colStorage"   text="Storage"  prefWidth="140"/>
+                            <TableColumn fx:id="colVerified"  text="Verified" prefWidth="70"/>
+                        </columns>
+                        <placeholder><Label text="No evidence records."/></placeholder>
+                    </TableView>
+                </VBox>
+
+                <!-- Chain of Custody -->
+                <VBox spacing="8" style="-fx-padding:15; -fx-background-color:#fdfefe;">
+                    <Label text="🔗  Chain of Custody  (select a row above)"
+                           style="-fx-font-size:13; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                    <TableView fx:id="custodyTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colCocUser"    text="Handled By" prefWidth="140"/>
+                            <TableColumn fx:id="colCocAction"  text="Action"     prefWidth="110"/>
+                            <TableColumn fx:id="colCocTime"    text="Timestamp"  prefWidth="160"/>
+                            <TableColumn fx:id="colCocRemarks" text="Remarks"    prefWidth="250"/>
+                        </columns>
+                        <placeholder><Label text="Select evidence to view custody chain."/></placeholder>
+                    </TableView>
+                </VBox>
+
+            </SplitPane>
+        </SplitPane>
+    </center>
+</BorderPane>

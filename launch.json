@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Run DFEMS",
+            "request": "launch",
+            "mainClass": "com.dfems.MainApp",
+            "projectName": "DFEMS",
+            "vmArgs": "--module-path \"${env:PATH_TO_FX}\" --add-modules javafx.controls,javafx.fxml",
+            "classpath": [
+                "$Auto",
+                "${workspaceFolder}/lib/ojdbc11.jar"
+            ]
+        }
+    ]
+}

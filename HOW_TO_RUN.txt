@@ -1,0 +1,239 @@
+================================================================
+  HOW TO RUN DFEMS IN VS CODE TERMINAL
+  (Step-by-step — Windows / Mac / Linux)
+================================================================
+
+CHOOSE YOUR METHOD:
+  Method A → Maven (RECOMMENDED — easiest, handles everything)
+  Method B → Manual javac + java commands (no Maven needed)
+
+================================================================
+METHOD A — MAVEN  (Recommended)
+================================================================
+
+STEP 1: INSTALL REQUIRED SOFTWARE
+----------------------------------
+
+1a) Install Java 17 or 21
+    Windows/Mac/Linux: https://adoptium.net
+    → Download "Temurin 21 LTS" → Install
+    → Verify: open terminal → type:  java -version
+      Should show: openjdk version "21..."
+
+1b) Install Maven
+    Windows:
+      → Download from https://maven.apache.org/download.cgi
+      → Extract to C:\maven\
+      → Add C:\maven\bin to PATH (System Environment Variables)
+      → Verify: mvn -version
+
+    Mac:
+      brew install maven
+      → Verify: mvn -version
+
+    Linux (Ubuntu/Debian):
+      sudo apt install maven
+      → Verify: mvn -version
+
+1c) VS Code Extensions (install these in VS Code)
+    → Open VS Code
+    → Press Ctrl+Shift+X (Extensions panel)
+    → Search and install:
+        • "Extension Pack for Java"   (by Microsoft)
+        • "Maven for Java"            (by Microsoft)
+
+
+STEP 2: DOWNLOAD ORACLE JDBC DRIVER
+-------------------------------------
+    → Go to: https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html
+    → Download: ojdbc11.jar
+    → Place the file in:   DFEMS/lib/ojdbc11.jar
+      (the lib/ folder already exists in the project)
+
+
+STEP 3: EDIT pom.xml FOR YOUR OPERATING SYSTEM
+------------------------------------------------
+    Open DFEMS/pom.xml
+    Find this line (line ~15):
+        <javafx.platform>win</javafx.platform>
+
+    Change it to match YOUR OS:
+        Windows  →  <javafx.platform>win</javafx.platform>
+        Mac      →  <javafx.platform>mac</javafx.platform>
+        Linux    →  <javafx.platform>linux</javafx.platform>
+
+
+STEP 4: SET YOUR DATABASE CREDENTIALS
+---------------------------------------
+    Open:  src/com/dfems/db/DBConnection.java
+    Edit lines 8–10:
+
+        private static final String URL      = "jdbc:oracle:thin:@localhost:1521:XE";
+        private static final String USERNAME = "dfems_user";
+        private static final String PASSWORD = "dfems_pass";
+
+    Match exactly what you set up in Oracle.
+
+
+STEP 5: OPEN PROJECT IN VS CODE
+---------------------------------
+    → Open VS Code
+    → File → Open Folder → select the DFEMS folder
+    → You should see pom.xml in the root
+
+
+STEP 6: OPEN THE TERMINAL IN VS CODE
+--------------------------------------
+    Press:  Ctrl + `   (backtick key, top-left of keyboard)
+    OR:     View → Terminal
+
+    Make sure you're INSIDE the DFEMS folder:
+        cd path/to/DFEMS      ← only if needed
+
+
+STEP 7: RUN THE PROJECT
+-------------------------
+
+    Type this command and press Enter:
+
+        mvn clean javafx:run
+
+    What it does:
+      • "clean"     → removes old compiled files
+      • "javafx:run"→ compiles everything + launches the app
+
+    First run takes ~1–2 minutes (downloads JavaFX from internet).
+    After that it's fast.
+
+    ✔ App window should appear with the DFEMS login screen!
+
+
+COMMON MAVEN ERRORS & FIXES:
+------------------------------
+
+  ERROR: "ojdbc11.jar not found"
+  FIX:   Make sure ojdbc11.jar is in DFEMS/lib/ojdbc11.jar
+         Then run: mvn clean javafx:run
+
+  ERROR: "mvn not recognized"
+  FIX:   Maven not installed or not in PATH
+         Windows: add C:\maven\bin to System Environment Variables → PATH
+         Restart VS Code terminal after changing PATH
+
+  ERROR: "cannot find symbol" or compile errors
+  FIX:   Make sure java.version in pom.xml matches your JDK:
+         <maven.compiler.source>17</maven.compiler.source>
+
+  ERROR: JavaFX runtime components are missing
+  FIX:   Check <javafx.platform> in pom.xml matches your OS (win/mac/linux)
+
+  ERROR: ORA-12541 / Connection refused
+  FIX:   Oracle DB is not running. Start it:
+         Windows: Services → OracleServiceXE → Start
+         Linux:   sudo systemctl start oracle-xe-21c
+
+
+================================================================
+METHOD B — MANUAL COMPILE + RUN  (No Maven)
+================================================================
+
+Use this if you don't want Maven.
+
+STEP 1: DOWNLOAD JAVAFX SDK
+-----------------------------
+    → Go to: https://gluonhq.com/products/javafx/
+    → Download JavaFX SDK 21 for your OS
+    → Extract to a folder, e.g.:
+        Windows: C:\javafx-sdk-21\
+        Mac/Linux: ~/javafx-sdk-21/
+
+STEP 2: SET A SHORTCUT VARIABLE (makes commands shorter)
+---------------------------------------------------------
+    In the VS Code terminal, run ONE of these:
+
+    Windows (Command Prompt):
+        set PATH_TO_FX=C:\javafx-sdk-21\lib
+
+    Windows (PowerShell):
+        $env:PATH_TO_FX="C:\javafx-sdk-21\lib"
+
+    Mac/Linux:
+        export PATH_TO_FX=~/javafx-sdk-21/lib
+
+STEP 3: COMPILE ALL .java FILES
+---------------------------------
+    From inside the DFEMS folder, run:
+
+    Windows:
+        javac --module-path %PATH_TO_FX% --add-modules javafx.controls,javafx.fxml -cp "lib\ojdbc11.jar" -d bin -sourcepath src src\com\dfems\*.java src\com\dfems\db\*.java src\com\dfems\model\*.java src\com\dfems\dao\*.java src\com\dfems\controller\*.java
+
+    Mac/Linux:
+        javac --module-path $PATH_TO_FX --add-modules javafx.controls,javafx.fxml -cp "lib/ojdbc11.jar" -d bin -sourcepath src src/com/dfems/*.java src/com/dfems/db/*.java src/com/dfems/model/*.java src/com/dfems/dao/*.java src/com/dfems/controller/*.java
+
+STEP 4: COPY RESOURCES
+------------------------
+    Windows:
+        xcopy /E /I resources bin
+
+    Mac/Linux:
+        cp -r resources/* bin/
+
+STEP 5: RUN THE APP
+---------------------
+    Windows:
+        java --module-path %PATH_TO_FX% --add-modules javafx.controls,javafx.fxml -cp "bin;lib\ojdbc11.jar" com.dfems.MainApp
+
+    Mac/Linux:
+        java --module-path $PATH_TO_FX --add-modules javafx.controls,javafx.fxml -cp "bin:lib/ojdbc11.jar" com.dfems.MainApp
+
+
+================================================================
+ORACLE DATABASE — QUICK SETUP REMINDER
+================================================================
+
+1. Install Oracle 21c XE:
+   https://www.oracle.com/database/technologies/xe-downloads.html
+
+2. Open SQL*Plus or SQL Developer
+   Connect as:  sys / YOUR_PASSWORD  as sysdba
+
+3. Create user:
+   CREATE USER dfems_user IDENTIFIED BY dfems_pass;
+   GRANT DBA TO dfems_user;
+   GRANT UNLIMITED TABLESPACE TO dfems_user;
+
+4. Reconnect as dfems_user and run the SQL script:
+   @/full/path/to/DFEMS/sql/dfems_database.sql
+
+5. Verify:
+   SELECT COUNT(*) FROM CASES;     -- should return 5
+   SELECT COUNT(*) FROM EVIDENCE;  -- should return 7
+
+
+================================================================
+TEST LOGIN EMAILS
+================================================================
+
+   admin@dfems.gov           →  ADMIN
+   arjun.sharma@dfems.gov    →  INVESTIGATOR
+   priya.nair@dfems.gov      →  FORENSIC_ANALYST
+   vikram.das@dfems.gov      →  FORENSIC_ANALYST
+   meena.pillai@dfems.gov    →  SUPERVISOR
+
+
+================================================================
+SUMMARY — FASTEST PATH
+================================================================
+
+  1.  Install Java 21      →  https://adoptium.net
+  2.  Install Maven        →  https://maven.apache.org
+  3.  Install VS Code Java extensions (Extension Pack for Java)
+  4.  Put ojdbc11.jar in   →  DFEMS/lib/ojdbc11.jar
+  5.  Edit pom.xml         →  set win / mac / linux
+  6.  Edit DBConnection.java → set your Oracle password
+  7.  Run Oracle DB        →  make sure it's started
+  8.  Run SQL script       →  dfems_database.sql in SQL Developer
+  9.  In VS Code terminal  →  mvn clean javafx:run
+  10. Login with           →  admin@dfems.gov
+
+================================================================

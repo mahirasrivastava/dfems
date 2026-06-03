@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.dfems.controller.AnalysisController"
+            style="-fx-background-color:#ecf0f1;">
+
+    <top>
+        <HBox style="-fx-background-color:#2c3e50; -fx-padding:12 20;"
+              spacing="16" alignment="CENTER_LEFT">
+            <Button text="⬅ Dashboard" onAction="#goBack"
+                    style="-fx-background-color:#7f8c8d; -fx-text-fill:white; -fx-cursor:hand;"/>
+            <Label text="🔬  Forensic Analysis"
+                   style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="🔄 Refresh" onAction="#handleRefresh"
+                    style="-fx-background-color:#27ae60; -fx-text-fill:white; -fx-cursor:hand;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane orientation="VERTICAL" dividerPositions="0.52">
+
+            <!-- TOP: Filter + Table -->
+            <VBox spacing="10" style="-fx-padding:15;">
+
+                <!-- Filter Bar -->
+                <HBox spacing="10" alignment="CENTER_LEFT"
+                      style="-fx-background-color:white; -fx-padding:10;
+                             -fx-border-color:#dfe6e9; -fx-border-radius:6; -fx-background-radius:6;">
+                    <Label text="Case / ID:" style="-fx-font-weight:bold;"/>
+                    <TextField fx:id="caseIdFilterField" promptText="e.g. CASE-2024-001"
+                               prefWidth="180" prefHeight="32"/>
+                    <Label text="Status:" style="-fx-font-weight:bold;"/>
+                    <ComboBox fx:id="statusFilterCombo" prefWidth="130" prefHeight="32"/>
+                    <Button text="🔍 Filter"   onAction="#handleFilter"
+                            style="-fx-background-color:#2980b9; -fx-text-fill:white; -fx-cursor:hand;"/>
+                    <Button text="✖ Clear"    onAction="#handleClearFilter"
+                            style="-fx-background-color:#95a5a6; -fx-text-fill:white; -fx-cursor:hand;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="totalCountLabel" style="-fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                </HBox>
+
+                <!-- Table -->
+                <TableView fx:id="analysisTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colAnalysisId"  text="ID"        prefWidth="55"/>
+                        <TableColumn fx:id="colCaseNumber"  text="Case No."  prefWidth="130"/>
+                        <TableColumn fx:id="colEvidenceFile" text="Evidence File" prefWidth="180"/>
+                        <TableColumn fx:id="colAnalyst"     text="Analyst"   prefWidth="130"/>
+                        <TableColumn fx:id="colTool"        text="Tool"      prefWidth="130"/>
+                        <TableColumn fx:id="colDate"        text="Date"      prefWidth="100"/>
+                        <TableColumn fx:id="colStatus"      text="Status"    prefWidth="110"/>
+                    </columns>
+                    <placeholder><Label text="No analysis records found."/></placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- BOTTOM: Detail + New Form -->
+            <SplitPane orientation="HORIZONTAL" dividerPositions="0.5">
+
+                <!-- Detail Panel -->
+                <VBox spacing="8" style="-fx-padding:18; -fx-background-color:white;">
+                    <Label text="📋  Selected Analysis Detail"
+                           style="-fx-font-size:14; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                    <Separator/>
+                    <Label fx:id="detailCaseLabel"     style="-fx-font-size:12;"/>
+                    <Label fx:id="detailEvidenceLabel" style="-fx-font-size:12;"/>
+                    <Label fx:id="detailAnalystLabel"  style="-fx-font-size:12;"/>
+                    <Label fx:id="detailToolLabel"     style="-fx-font-size:12;"/>
+                    <Label fx:id="detailDateLabel"     style="-fx-font-size:12;"/>
+                    <Label fx:id="detailStatusLabel"   style="-fx-font-size:12; -fx-font-weight:bold;"/>
+                    <Label text="Findings:" style="-fx-font-weight:bold; -fx-padding:4 0 0 0;"/>
+                    <TextArea fx:id="detailFindingsArea" editable="false"
+                              prefHeight="110" wrapText="true"
+                              style="-fx-font-size:12; -fx-background-color:#f8f9fa;"/>
+                    <HBox spacing="8" style="-fx-padding:4 0 0 0;">
+                        <Button text="✔ Complete"  onAction="#handleMarkComplete"
+                                style="-fx-background-color:#27ae60; -fx-text-fill:white; -fx-cursor:hand;"/>
+                        <Button text="📝 Reviewed" onAction="#handleMarkReviewed"
+                                style="-fx-background-color:#8e44ad; -fx-text-fill:white; -fx-cursor:hand;"/>
+                        <Button text="📤 Export"   onAction="#handleExportFindings"
+                                style="-fx-background-color:#2980b9; -fx-text-fill:white; -fx-cursor:hand;"/>
+                        <Button text="🗑 Delete"    onAction="#handleDelete"
+                                style="-fx-background-color:#e74c3c; -fx-text-fill:white; -fx-cursor:hand;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- New Analysis Form -->
+                <VBox spacing="10" style="-fx-padding:18; -fx-background-color:#eaf4fb;">
+                    <Label text="➕  New Analysis Entry"
+                           style="-fx-font-size:14; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                    <Separator/>
+
+                    <Label text="Evidence ID *" style="-fx-font-weight:bold;"/>
+                    <TextField fx:id="evidenceIdField" promptText="e.g. 5001" prefHeight="32"/>
+
+                    <Label text="Analyst *" style="-fx-font-weight:bold;"/>
+                    <ComboBox fx:id="analystCombo" maxWidth="Infinity" prefHeight="32"
+                              promptText="Select analyst..."/>
+
+                    <Label text="Forensic Tool *" style="-fx-font-weight:bold;"/>
+                    <ComboBox fx:id="toolCombo" maxWidth="Infinity" prefHeight="32"
+                              promptText="Select tool..."/>
+
+                    <Label text="Findings *" style="-fx-font-weight:bold;"/>
+                    <TextArea fx:id="findingsArea" prefHeight="90" wrapText="true"
+                              promptText="Describe forensic findings in detail..."/>
+
+                    <Label text="Status" style="-fx-font-weight:bold;"/>
+                    <ComboBox fx:id="analysisStatusCombo" maxWidth="Infinity" prefHeight="32"/>
+
+                    <HBox spacing="10">
+                        <Button fx:id="submitBtn" text="💾 Submit" onAction="#handleSubmit"
+                                prefHeight="36" HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                style="-fx-background-color:#2c3e50; -fx-text-fill:white;
+                                       -fx-font-weight:bold; -fx-cursor:hand;"/>
+                        <Button text="✖ Clear" onAction="#handleClearForm"
+                                prefHeight="36" prefWidth="80"
+                                style="-fx-background-color:#95a5a6; -fx-text-fill:white; -fx-cursor:hand;"/>
+                    </HBox>
+
+                    <Label fx:id="statusLabel" wrapText="true" style="-fx-font-weight:bold;"/>
+                </VBox>
+
+            </SplitPane>
+        </SplitPane>
+    </center>
+</BorderPane>

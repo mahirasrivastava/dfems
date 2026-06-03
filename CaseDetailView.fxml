@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.dfems.controller.CaseDetailController"
+            style="-fx-background-color:#ecf0f1;">
+
+    <top>
+        <HBox style="-fx-background-color:#2c3e50; -fx-padding:12 20;"
+              spacing="16" alignment="CENTER_LEFT">
+            <Button text="⬅ Dashboard" onAction="#goBack"
+                    style="-fx-background-color:#7f8c8d; -fx-text-fill:white; -fx-cursor:hand;"/>
+            <Label fx:id="caseNumberLabel"
+                   style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="caseStatusLabel"
+                   style="-fx-text-fill:#f39c12; -fx-font-weight:bold; -fx-font-size:13;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane orientation="VERTICAL" dividerPositions="0.28">
+
+            <!-- Case Info Panel -->
+            <VBox spacing="10" style="-fx-padding:18; -fx-background-color:white;">
+                <HBox spacing="40">
+                    <VBox spacing="4">
+                        <Label fx:id="caseTypeLabel"      style="-fx-font-size:13;"/>
+                        <Label fx:id="caseLocationLabel"  style="-fx-font-size:13;"/>
+                        <Label fx:id="caseArrestLabel"    style="-fx-font-size:13;"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label fx:id="caseDomesticLabel"  style="-fx-font-size:13;"/>
+                        <Label fx:id="caseCreatedByLabel" style="-fx-font-size:13;"/>
+                    </VBox>
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Description:" style="-fx-font-weight:bold;"/>
+                        <TextArea fx:id="caseDescArea" editable="false" prefHeight="80"
+                                  wrapText="true" style="-fx-background-color:#f8f9fa;"/>
+                    </VBox>
+                </HBox>
+                <HBox spacing="12">
+                    <Button text="❌ Close Case"       onAction="#handleCloseCase"
+                            style="-fx-background-color:#e74c3c; -fx-text-fill:white; -fx-cursor:hand;"/>
+                    <Button text="📄 Generate Report"  onAction="#handleGenerateReport"
+                            style="-fx-background-color:#2980b9; -fx-text-fill:white; -fx-cursor:hand;"/>
+                    <Label fx:id="statusLabel" style="-fx-font-weight:bold;"/>
+                </HBox>
+            </VBox>
+
+            <!-- Evidence + Analysis Tables -->
+            <SplitPane orientation="HORIZONTAL" dividerPositions="0.5">
+
+                <!-- Evidence -->
+                <VBox spacing="8" style="-fx-padding:15;">
+                    <Label text="📁  Evidence"
+                           style="-fx-font-size:14; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                    <TableView fx:id="evidenceTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colEvId"       text="ID"       prefWidth="55"/>
+                            <TableColumn fx:id="colEvFile"     text="File Name" prefWidth="180"/>
+                            <TableColumn fx:id="colEvType"     text="Type"     prefWidth="100"/>
+                            <TableColumn fx:id="colEvSize"     text="Size"     prefWidth="80"/>
+                            <TableColumn fx:id="colEvVerified" text="Verified" prefWidth="70"/>
+                        </columns>
+                        <placeholder><Label text="No evidence for this case."/></placeholder>
+                    </TableView>
+                </VBox>
+
+                <!-- Analysis -->
+                <VBox spacing="8" style="-fx-padding:15;">
+                    <Label text="🔬  Analysis Results"
+                           style="-fx-font-size:14; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                    <TableView fx:id="analysisTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colArAnalyst" text="Analyst"  prefWidth="130"/>
+                            <TableColumn fx:id="colArTool"    text="Tool"     prefWidth="120"/>
+                            <TableColumn fx:id="colArDate"    text="Date"     prefWidth="100"/>
+                            <TableColumn fx:id="colArStatus"  text="Status"   prefWidth="110"/>
+                        </columns>
+                        <placeholder><Label text="No analysis for this case."/></placeholder>
+                    </TableView>
+                </VBox>
+
+            </SplitPane>
+        </SplitPane>
+    </center>
+</BorderPane>

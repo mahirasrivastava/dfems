@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.dfems.controller.NewCaseController"
+            style="-fx-background-color:#ecf0f1;">
+
+    <top>
+        <HBox style="-fx-background-color:#2c3e50; -fx-padding:12 20;"
+              spacing="16" alignment="CENTER_LEFT">
+            <Button text="⬅ Dashboard" onAction="#goBack"
+                    style="-fx-background-color:#7f8c8d; -fx-text-fill:white; -fx-cursor:hand;"/>
+            <Label text="➕  Register New Case"
+                   style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color:#ecf0f1;">
+            <VBox spacing="16" style="-fx-padding:30; -fx-max-width:700;">
+
+                <!-- Case Number + Date -->
+                <HBox spacing="20">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Case Number *" style="-fx-font-weight:bold;"/>
+                        <TextField fx:id="caseNumberField" promptText="e.g. CASE-2024-010"
+                                   prefHeight="36"/>
+                    </VBox>
+                    <VBox spacing="5">
+                        <Label text="Case Date *" style="-fx-font-weight:bold;"/>
+                        <DatePicker fx:id="caseDatePicker" prefHeight="36" prefWidth="180"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Type + Location -->
+                <HBox spacing="20">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Case Type *" style="-fx-font-weight:bold;"/>
+                        <ComboBox fx:id="caseTypeCombo" maxWidth="Infinity" prefHeight="36"
+                                  promptText="Select case type..."/>
+                    </VBox>
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Location" style="-fx-font-weight:bold;"/>
+                        <TextField fx:id="locationField" promptText="City, State"
+                                   prefHeight="36"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Description -->
+                <VBox spacing="5">
+                    <Label text="Description" style="-fx-font-weight:bold;"/>
+                    <TextArea fx:id="descriptionArea" prefHeight="100" wrapText="true"
+                              promptText="Describe the case details..."/>
+                </VBox>
+
+                <!-- Checkboxes -->
+                <HBox spacing="40">
+                    <CheckBox fx:id="arrestCheck"   text="Arrest Made"/>
+                    <CheckBox fx:id="domesticCheck" text="Domestic Case"/>
+                </HBox>
+
+                <Separator/>
+
+                <!-- Buttons -->
+                <HBox spacing="12">
+                    <Button fx:id="submitBtn" text="✔  Register Case" onAction="#handleSubmit"
+                            prefHeight="40" prefWidth="180"
+                            style="-fx-background-color:#27ae60; -fx-text-fill:white;
+                                   -fx-font-size:14; -fx-font-weight:bold; -fx-cursor:hand;"/>
+                    <Button text="✖  Clear" onAction="#handleClear" prefHeight="40" prefWidth="100"
+                            style="-fx-background-color:#95a5a6; -fx-text-fill:white; -fx-cursor:hand;"/>
+                </HBox>
+
+                <Label fx:id="statusLabel" wrapText="true" style="-fx-font-weight:bold;"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>
